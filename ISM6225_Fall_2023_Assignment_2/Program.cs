@@ -112,8 +112,43 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return new List<IList<int>>();
+                List<IList<int>> missingRanges = new List<IList<int>>();
+
+                // Iterate through the sorted array and find missing ranges
+                for (int i = 0; i < nums.Length; i++)
+                {
+                    if (lower < nums[i])
+                    {
+                        if (lower == nums[i] - 1)
+                        {
+                            // If there is only one number missing, add that number as a single-range
+                            missingRanges.Add(new List<int> { lower });
+                        }
+                        else
+                        {
+                            // If there is a range of missing numbers, add that range
+                            missingRanges.Add(new List<int> { lower, nums[i] - 1 });
+                        }
+                    }
+                    lower = nums[i] + 1;
+                }
+
+                // Handle any missing numbers after the last element of the array
+                if (lower <= upper)
+                {
+                    if (lower == upper)
+                    {
+                        missingRanges.Add(new List<int> { lower });
+                    }
+                    else
+                    {
+                        missingRanges.Add(new List<int> { lower, upper });
+                    }
+                }
+
+                // Return the list of missing ranges
+                return missingRanges;
+
             }
             catch (Exception)
             {
@@ -156,8 +191,36 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return s.Length == 0;
+                Stack<char> stack = new Stack<char>();
+
+                // Iterate through the characters of the string
+                foreach (char c in s)
+                {
+                    if (c == '(' || c == '[' || c == '{')
+                    {
+                        // Push opening parentheses onto the stack
+                        stack.Push(c);
+                    }
+                    else
+                    {
+                        if (stack.Count == 0)
+                        {
+                            // If there is no matching opening parenthesis for the current closing parenthesis, it's invalid
+                            return false;
+                        }
+                        char top = stack.Pop();
+                        // Check if the current closing parenthesis matches the top of the stack
+                        if (c == ')' && top != '(' || c == ']' && top != '[' || c == '}' && top != '{')
+                        {
+                            return false;
+                        }
+                    }
+                }
+
+                // If the stack is empty, all parentheses were properly matched
+                return stack.Count == 0;
+
+
             }
             catch (Exception)
             {
@@ -191,8 +254,20 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 1;
+                int maxProfit = 0;
+                int minPrice = int.MaxValue;
+
+                // Iterate through the array to find the minimum price and maximum profit
+                foreach (int price in prices)
+                {
+                    minPrice = Math.Min(minPrice, price);
+                    maxProfit = Math.Max(maxProfit, price - minPrice);
+                }
+
+                // Return the maximum profit
+                return maxProfit;
+
+
             }
             catch (Exception)
             {
@@ -229,8 +304,34 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return false;
+                // Define a dictionary to map strobogrammatic pairs
+                Dictionary<char, char> strobogrammaticPairs = new Dictionary<char, char> {
+        { '0', '0' },
+        { '1', '1' },
+        { '6', '9' },
+        { '8', '8' },
+        { '9', '6' }
+    };
+
+                int left = 0;
+                int right = s.Length - 1;
+
+                // Compare characters from both ends of the string
+                while (left <= right)
+                {
+                    if (!strobogrammaticPairs.ContainsKey(s[left]) || strobogrammaticPairs[s[left]] != s[right])
+                    {
+                        // If the pair is not strobogrammatic, return false
+                        return false;
+                    }
+                    left++;
+                    right--;
+                }
+
+                // If the entire string is strobogrammatic, return true
+                return true;
+
+
             }
             catch (Exception)
             {
@@ -271,8 +372,26 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                Dictionary<int, int> countMap = new Dictionary<int, int>();
+                int count = 0;
+
+                // Count occurrences of each number in the array
+                foreach (int num in nums)
+                {
+                    if (countMap.ContainsKey(num))
+                    {
+                        count += countMap[num];
+                        countMap[num]++;
+                    }
+                    else
+                    {
+                        countMap[num] = 1;
+                    }
+                }
+
+                // Return the total count of good pairs
+                return count;
+
             }
             catch (Exception)
             {
@@ -321,8 +440,36 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return 0;
+                long max1 = long.MinValue;
+                long max2 = long.MinValue;
+                long max3 = long.MinValue;
+
+                foreach (int num in nums)
+                {
+                    if (num == max1 || num == max2 || num == max3)
+                    {
+                        continue; // Ignore duplicates
+                    }
+                    if (num > max1)
+                    {
+                        max3 = max2;
+                        max2 = max1;
+                        max1 = num;
+                    }
+                    else if (num > max2)
+                    {
+                        max3 = max2;
+                        max2 = num;
+                    }
+                    else if (num > max3)
+                    {
+                        max3 = num;
+                    }
+                }
+
+                // If there is no third maximum, return the maximum number
+                return max3 == long.MinValue ? (int)max1 : (int)max3;
+
             }
             catch (Exception)
             {
@@ -354,8 +501,22 @@ namespace ISM6225_Fall_2023_Assignment_2
         {
             try
             {
-                // Write your code here and you can modify the return value according to the requirements
-                return new List<string>() { };
+                List<string> possibleMoves = new List<string>();
+
+                for (int i = 0; i < currentState.Length - 1; i++)
+                {
+                    if (currentState[i] == '+' && currentState[i + 1] == '+')
+                    {
+                        char[] nextState = currentState.ToCharArray();
+                        nextState[i] = '-';
+                        nextState[i + 1] = '-';
+                        possibleMoves.Add(new string(nextState));
+                    }
+                }
+
+                // Return the list of possible moves
+                return possibleMoves;
+
             }
             catch (Exception)
             {
@@ -383,8 +544,22 @@ namespace ISM6225_Fall_2023_Assignment_2
 
         public static string RemoveVowels(string s)
         {
-            // Write your code here and you can modify the return value according to the requirements
-            return "";
+            StringBuilder result = new StringBuilder();
+
+            // Iterate through each character in the input string
+            foreach (char c in s)
+            {
+                // Check if the character is not a vowel
+                if ("aeiou".IndexOf(c) == -1)
+                {
+                    // If not a vowel, append the character to the result string
+                    result.Append(c);
+                }
+            }
+
+            // Return the string with vowels removed
+            return result.ToString();
+
         }
 
         /* Inbuilt Functions - Don't Change the below functions */
